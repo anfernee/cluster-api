@@ -69,6 +69,9 @@ type ClusterNetworkingConfig struct {
 
 	// Domain name for services.
 	ServiceDomain string `json:"serviceDomain"`
+
+	// ReservedAddresses for nodes. Empty list implies using DHCP.
+	ReservedAddresses []Address `json:"reserved_addresses"`
 }
 
 // NetworkRanges represents ranges of network addresses.
@@ -99,6 +102,28 @@ type ClusterStatus struct {
 	// own versioned API types that should be
 	// serialized/deserialized from this field.
 	ProviderStatus *runtime.RawExtension `json:"providerStatus"`
+
+	// AddressStatus is the IPAM status
+	AddressStatus AddressStatus `json:"address_status"`
+}
+
+// AddressStatus is the IPAM status
+type AddressStatus struct {
+	// AllocableAddresses is the addresses that are free to use
+	AllocableAddresses []Address `json:"allocable_addresses"`
+
+	// UsedAddress are the addresses that are already assigned to machine
+	UsedAddresses []Address `json:"used_addresses"`
+}
+
+// Address represents an address allocated to a machine
+type Address struct {
+	// IP represents an IP address
+	IP string `json:"ip"`
+
+	// Hostname is the hostname of the machine
+	// +optional
+	Hostname string `json:"hostname"`
 }
 
 // APIEndpoint represents a reachable Kubernetes API endpoint.
